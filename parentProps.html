@@ -1,0 +1,70 @@
+<!--props 예제 상위 컴포넌트 데이터나 로직을 하위 컴포넌트에 전달 또는 반대-->
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Title</title>
+</head>
+<body>
+<div id="app">
+    <outer></outer>
+</div>
+
+<script src="https://cdn.jsdelivr.net/npm/vue"></script>
+
+
+<script>
+
+    const inner={
+        template:"<div> inner {{title}}  <input type='text' id='input'> <button v-on:click='add'>추가</button></div>",
+        props: ['title','clickJob'],
+        methods: {
+            'add':function (e) {
+                const inputElement = this.$el.querySelector("#input")
+                alert(inputElement.value)
+                this.$emit("addItem",inputElement.value)
+            }
+        }
+    }
+
+    const listComponent={
+        template:"<ul ><li>AAAAAAAAAAAAA</li><li>AAAAAAAAAAAAA</li><li>AAAAAAAAAAAAA</li></ul>",
+        methods:{
+            'addlist': function(){
+                console.log("listComponent addlist method called......")
+            }
+        }
+    }
+
+    const outer={
+        template:"<div><p>OUTER</p> <inner :title='title' :clickJob='doJob' v-on:addItem='add'></inner:> <listComponent :todos='todos'></listComponent>  </div>",
+        data: function(){
+          return {
+              title: "Hello World",
+              doJob: function () {
+                  alert('AAAA')
+              },
+              todos: ['AAA','BBB','CCC']
+          }
+        },
+        components: {
+            "inner":inner,
+            "listComponent":listComponent
+        },
+        methods:{
+            'add':function(newItem){
+                console.log("outer add method called" + newItem)
+            }
+        }
+    }
+
+    new Vue({
+        el: "#app",
+        components: {
+            "outer":outer
+        }
+    })
+</script>
+
+</body>
+</html>
